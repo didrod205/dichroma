@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>dichroma — see your image through color blindness, locally</title>
+    <meta
+      name="description"
+      content="Drop an image to instantly see how it looks to people with color blindness — protanopia, deuteranopia, tritanopia and more. Accurate, 100% local, nothing uploaded. Check your designs for accessibility."
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <h1>🌈 dichroma</h1>
+      <p class="tagline">
+        See your image the way <strong>~1 in 12 men</strong> do. Check a design
+        for <strong>color-blind accessibility</strong> in one drop.
+      </p>
+      <p class="privacy">🔒 100% local — your image never leaves your browser.</p>
+    </header>
+
+    <main>
+      <section id="drop" class="drop">
+        <input type="file" id="file" accept="image/*" hidden />
+        <p>
+          <button id="pick" type="button">Choose an image</button>
+          <button id="sample" type="button" class="ghost">Try a sample</button>
+        </p>
+        <p class="hint">…or drag &amp; drop, or paste (⌘/Ctrl+V). Click any tile to download it.</p>
+      </section>
+
+      <section id="grid" class="grid" aria-live="polite"></section>
+    </main>
+
+    <footer>
+      <a href="https://github.com/didrod205/dichroma">GitHub</a> ·
+      <a href="https://www.npmjs.com/package/dichroma">npm</a> ·
+      <span>MIT</span> · <span>Zero dependencies</span>
+    </footer>
+
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>
