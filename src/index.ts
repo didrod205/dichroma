@@ -98,3 +98,14 @@ export function simulateImage(source: PixelSource, type: CVDType, severity?: num
   }
   return out;
 }
+
+// Distinguishability / palette auditing (uses `simulate` above).
+export {
+  distinguish,
+  auditPalette,
+  deltaE,
+  rgbToLab,
+  DEFAULT_THRESHOLD,
+  type DistinguishResult,
+  type PalettePair,
+} from "./distinguish.js";

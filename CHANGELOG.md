@@ -6,6 +6,27 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.2.0]
+
+### Added
+
+- **Distinguishability checks.** `distinguish(a, b, type)` answers "can a
+  colorblind user still tell these two colors apart?" by simulating both and
+  measuring CIE76 ΔE in CIELAB. `auditPalette(colors, type)` finds every
+  confusable pair in a palette (worst first). Plus `deltaE` and `rgbToLab`.
+- **Command-line interface** (`dichroma` bin), zero-dependency:
+  - `dichroma <hex>` simulates a color (swatch view); `--all` for every type.
+  - `dichroma <image.png>` writes a simulated PNG (`-o`, or `--all` variants).
+  - `dichroma check <a> <b>` reports ΔE and exits non-zero when a pair becomes
+    indistinguishable — a CI guard for chart/status palettes.
+  - Decodes **and encodes** PNG via Node's built-in zlib (no npm deps).
+- `decodePng` / `encodePng` / `isPng` exported for advanced Node use.
+
+### Notes
+
+- The PNG codec is imported only by the CLI, so the browser library bundle stays
+  Node-API-free and dependency-free.
+
 ## [0.1.0]
 
 ### Added
@@ -22,5 +43,6 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   download any tile — deployed to GitHub Pages.
 - Zero runtime dependencies; ESM + CJS + TypeScript types.
 
-[Unreleased]: https://github.com/didrod205/dichroma/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/didrod205/dichroma/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/didrod205/dichroma/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/didrod205/dichroma/releases/tag/v0.1.0

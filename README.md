@@ -51,13 +51,46 @@ tooling.
 
 **No install —** just open the **[web app](https://didrod205.github.io/dichroma/)**.
 
-For the library:
+**Command line:**
+
+```bash
+npx dichroma "#e41a1c" --all                       # how a red looks to every type
+npx dichroma chart.png -t deuteranopia -o sim.png  # simulate a whole PNG
+npx dichroma check "#377eb8" "#984ea3" -t deuteranopia   # can users tell them apart?
+```
+
+**Library:**
 
 ```bash
 npm install dichroma
 ```
 
-Zero dependencies. ESM + CJS + TypeScript types. Runs in the browser, Node, Deno and Bun.
+Zero runtime dependencies. ESM + CJS + TypeScript types. Runs in the browser, Node, Deno and Bun.
+
+## CLI
+
+```bash
+dichroma <hex|image.png> [-t <type>] [options]
+dichroma check <hexA> <hexB> [-t <type>]
+```
+
+| Option | Description |
+| ------ | ----------- |
+| `-t, --type <type>` | Deficiency (default `deuteranopia`) |
+| `--severity <0–1>` | Override deficiency strength |
+| `-o, --out <file>` | Output PNG path (image mode) |
+| `--all` | Every deficiency variant |
+
+```text
+$ dichroma check "#377eb8" "#984ea3" -t deuteranopia
+#377eb8 vs #984ea3 under Deuteranopia:
+  normal ΔE 38.7, simulated ΔE 9.5 (25% retained)
+  → TOO SIMILAR            # exit code 1 — fails CI / scripts
+```
+
+`check` exits non-zero when a color pair becomes hard to tell apart — drop it
+into CI to guard your chart/status palette. Images are **PNG** (decoded via
+Node's built-in zlib, so the CLI stays dependency-free). Nothing is uploaded.
 
 ## Usage
 
@@ -115,8 +148,24 @@ CVD_TYPES.deuteranomaly;
 | `simulate(rgb, type, severity?)` | Simulate a single `[r,g,b]` color. |
 | `simulateHex(hex, type, severity?)` | Same, for hex strings. |
 | `simulateImage(source, type, severity?)` | Simulate an RGBA buffer / `ImageData` (returns a new buffer; alpha preserved). |
+| `distinguish(a, b, type, opts?)` | Will two colors stay tellable-apart under a deficiency? Returns `{ normal, simulated, distinguishable, retained }`. |
+| `auditPalette(colors, type, opts?)` | Find every confusable pair in a palette (worst first). |
+| `deltaE(a, b)` / `rgbToLab(rgb)` | CIE76 color difference & CIELAB. |
 | `CVD_LIST` / `CVD_TYPES` | The deficiency types and their metadata. |
 | `hexToRgb` / `rgbToHex` | Helpers. |
+
+### Check distinguishability
+
+```ts
+import { distinguish, auditPalette, hexToRgb } from "dichroma";
+
+distinguish([255, 0, 0], [0, 0, 255], "deuteranopia");
+// { normal: 176.3, simulated: 172.8, distinguishable: true, retained: 0.98 }
+
+// Audit a whole chart palette and list the pairs that collapse:
+auditPalette(["#377eb8", "#984ea3", "#4daf4a"].map(hexToRgb), "deuteranopia");
+// { pairs: [{ a: 0, b: 1, simulated: 9.5, distinguishable: false }], ok: false }
+```
 
 ## FAQ
 
